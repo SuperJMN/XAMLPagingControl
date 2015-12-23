@@ -1,0 +1,86 @@
+﻿<Window x:Class="PagingControlProject.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:PagingControlProject"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:customControl="clr-namespace:PagingControlProject.Custom_Control"
+        mc:Ignorable="d"
+        Title="Pagging Window" Height="350" Width="525" d:DataContext="{d:DesignInstance local:MainViewModel}">
+    <Window.DataContext>
+        <local:MainViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            
+            <Style TargetType="{x:Type customControl:PagingControl}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type customControl:PagingControl}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Name="PART_FirstPageButton" Content="&lt;&lt;" Grid.Column="0"/>
+                                <Button Name="PART_PreviousPageButton" Content="&lt;" Grid.Column="1"/>
+                                <TextBox Name="PART_PageTextBox" Grid.Column="2"/>
+                                <TextBlock Text="{Binding TotalPages, RelativeSource={RelativeSource TemplatedParent}}" Grid.Column="3"/>
+                                <Button Name="PART_NextPageButton" Content="&gt;" Grid.Column="4"/>
+                                <Button Name="PART_LastPageButton" Content="&gt;&gt;" Grid.Column="5"/>
+                                <ComboBox Name="PART_PageSizesCombobox" Grid.Column="6"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+
+        <!--<ListBox ItemsSource="{Binding ItemsSource, ElementName=pageControl, Mode=OneWay}">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type data:Student}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding FirstName}" />
+                        <TextBlock Text="{Binding LastName}" />
+                        <TextBlock Text="{Binding Age}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>-->
+
+        <local:CustomSortingDataGrid 
+            SortCommand="{Binding SortCommand}"
+            ItemsSource="{Binding ItemsSource, ElementName=PagingControl, Mode=OneWay}" 
+            AutoGenerateColumns="False"
+            CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Middlename" Binding="{Binding MiddleName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Lastname" Binding="{Binding LastName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Age" Binding="{Binding Age}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </local:CustomSortingDataGrid>
+
+        <!--AQUÍ ESTÁ LA CLAVE-->
+        <customControl:PagingControl x:Name="PagingControl" Grid.Row="1" Height="25" Filter="{Binding Filter}" PageContract="{Binding Service}">
+            <customControl:PagingControl.PageSizes>
+                <sys:Int32>10</sys:Int32>
+                <sys:Int32>20</sys:Int32>
+                <sys:Int32>50</sys:Int32>
+                <sys:Int32>100</sys:Int32>
+            </customControl:PagingControl.PageSizes>
+        </customControl:PagingControl>
+    </Grid>
+</Window>
